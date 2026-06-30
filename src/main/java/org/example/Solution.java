@@ -1,7 +1,6 @@
 package org.example;
 
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.*;
 
 class Solution {
       public static int subarraySum(int[] nums, int k) {
@@ -111,5 +110,214 @@ public static String minWindow(String s, String t) {
     return minLen==Integer.MAX_VALUE?"":s.substring(start,start+minLen);
 }
 
+public static int maxSubArray(int[] nums) {
+
+          int max=0;
+
+    for (int i = 0; i < nums.length; i++) {
+        int temp=nums[i];
+        for (int j = i+1; j < nums.length; j++) {
+            temp+=nums[j];
+            max=Math.max(temp,max);
+        }
+    }
+    return max;
+}
+
+
+public static int maxSubArrayWrongAnswer(int[] nums){
+    int[] max = new int[2];
+
+    int lastIndex= nums.length;
+    if(nums.length==1){
+        return nums[0];
+    }
+    for (int i = 0; i < nums.length ; i++) {
+        int temp=nums[i];
+        for (int j = i+1; j < lastIndex; j++) {
+            temp+=nums[j];
+            if(max[0]<temp){
+                max[0]=temp;
+                max[1]=j;
+            }
+        }
+        lastIndex=max[1];
+    }
+       return max[0];
+}
+
+public static int maxSubArray3(int[] nums) {
+        // 应对 edge case（边界情况）：用数组第一个元素初始化，完美处理全负数数组
+        int currentSum = nums[0];
+        int maxSum = nums[0];
+
+        // 从第二个元素开始遍历 (i = 1)
+        for (int i = 1; i < nums.length; i++) {
+            // 状态转移：比较“当前数字独立成派”和“加入前面的子数组”哪个更大
+            currentSum = Math.max(nums[i], currentSum + nums[i]);
+
+            // 每次计算完，更新全局最大值
+            maxSum = Math.max(maxSum, currentSum);
+        }
+
+        return maxSum;
+    }
+
+    public static int maxDistance(String moves) {
+        int x = 0;
+        int y = 0;
+        int underscores = 0;
+
+        // 遍历字符串
+        for (int i = 0; i < moves.length(); i++) {
+            char c = moves.charAt(i);
+            if (c == 'L') {
+                x--;
+            } else if (c == 'R') {
+                x++;
+            } else if (c == 'U') {
+                y++;
+            } else if (c == 'D') {
+                y--;
+            } else if (c == '_') {
+                underscores++;
+            }
+        }
+
+        // 返回绝对值之和加上下划线的数量
+        return Math.abs(x) + Math.abs(y) + underscores;
+    }
+
+    public static int countValidSubarrays(int[] nums, int x) {
+        int count = 0;
+        for (int i = 0; i < nums.length; i++) {
+            long sum =0;
+            for (int j = i; j < nums.length; j++) {
+               sum+=nums[j];
+               if(isValid(sum,x)){
+                   count++;
+               }
+            }
+        }
+        return count;
+    }
+    private static boolean isValid(long sum, int x) {
+          sum=Math.abs(sum);
+        boolean isLast = (sum%10==x);
+
+        if (!isLast) {
+            return false;
+        }
+        while (sum >= 10) {
+            sum /= 10;
+        }
+       boolean isFirst = (sum%10==x);
+        return  isFirst;
+    }
+
+    public static int countValidSubarrays2(int[] nums, int x) {
+        int count = 0;
+        for (int i = 0; i < nums.length; i++) {
+            // 使用 long 防止 Integer overflow (整数溢出)
+            long sum = 0;
+            for (int j = i; j < nums.length; j++) {
+                sum += nums[j];
+                if (isValid2(sum, x)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    private static boolean isValid2(long sum, int x) {
+        // 获取 Absolute value (绝对值)，防止负数取模出现逻辑错误
+        long absSum = Math.abs(sum);
+
+        // 1. 先验证最后一位。如果不等，直接触发 Early exit (提前退出)
+        long lastDigit = absSum % 10;
+        if (lastDigit != x) {
+            return false;
+        }
+
+        // 2. 如果最后一位匹配，再通过循环寻找第一位
+        while (absSum >= 10) {
+            absSum /= 10;
+        }
+        long firstDigit = absSum;
+
+        // 3. 验证第一位
+        return firstDigit == x;
+    }
+    public static int[][] merge(int[][] intervals) {
+        //Handle edge case
+        if(intervals.length==0 ){
+            return new int[0][];
+        }
+        //Sorting intervals by the firs ele in every subArray
+        Arrays.sort(intervals,(a,b)->Integer.compare(a[0],b[0]));
+        //Init A dataStructure to store merged eles
+        ArrayList<int[]> merged = new ArrayList<>();
+        //judge if need merge and process subArray
+
+        for(int[] interval:intervals){
+            //if merged is empty or the last subArray's end is less than the current subArray's start, no merge needed
+            if(merged.isEmpty()||merged.get(merged.size()-1)[1]<interval[0]){
+                merged.add(interval);
+            }else{
+                //merge the last subArray with the current subArray
+                merged.get(merged.size()-1)[1]=Math.max(merged.get(merged.size()-1)[1],interval[1]);
+            }
+        }
+        return merged.toArray(new int[merged.size()][]);
+    }
+
+    public static void rotate1(int[] nums, int k) {
+
+        k = k % nums.length;
+        reverse(nums, 0, nums.length - 1);
+        reverse(nums, 0, k - 1);
+        reverse(nums, k, nums.length - 1);
+
+    }
+    private  static int[] reverse(int[] nums,int start,int end){
+
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+          return nums;
+    }
+
+        public static int[] productExceptSelf(int[] nums) {
+            int n = nums.length;
+            int[] answer = new int[n];
+
+            // Step 1: Calculate prefix products
+            // answer[i] 此时存储的是 nums[i] 左侧所有元素的乘积
+            answer[0] = 1; // 第一个元素左边没有东西，所以前缀乘积默认为 1
+            for (int i = 1; i < n; i++) {
+                answer[i] = answer[i - 1] * nums[i - 1];
+            }
+
+            // Step 2: Calculate suffix products and multiply
+            // suffixProduct 实时记录当前元素右侧所有元素的乘积
+            int suffixProduct = 1; // 最后一个元素右边没有东西，后缀乘积默认为 1
+            for (int i = n - 1; i >= 0; i--) {
+                // 最终的 answer[i] = (左侧前缀乘积) * (右侧后缀乘积)
+                answer[i] = answer[i] * suffixProduct;
+                // 更新 suffixProduct，为上一个元素（即左边一个元素）做准备
+                suffixProduct = suffixProduct * nums[i];
+            }
+
+            return answer;
+        }
+
+
+
 
 }
+
