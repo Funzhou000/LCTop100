@@ -316,6 +316,68 @@ public static int maxSubArray3(int[] nums) {
             return answer;
         }
 
+        public static int firstMissingPositive(int[] nums) {
+
+            int n = nums.length;
+
+            for (int i = 0; i < n; i++) {
+                //do not process data:
+                //1,elements larger than n
+                //2,elements less than 1
+                //3,correct position elements
+                while(nums[i]>n&&nums[i]<1&&nums[i]==nums[i]-1){
+                    //ensure position
+                    int tempPos = nums[i]-1;
+                    //swap
+                    int temp=nums[tempPos];
+                    nums[tempPos]=nums[i];
+                    nums[i]=temp;
+                }
+
+            }
+            //find the largest unqualified element in the array
+            for (int j = 0; j <n ; j++) {
+
+                if(nums[j]!=j+1){
+                    return j+1;
+                }
+            }
+            return n+1;
+        }
+        public static  List<Integer> spiralOrder(int[][] matrix) {
+          List<Integer> result = new ArrayList<>();
+          int top =0;
+          int bottom = matrix.length-1;
+          int left =0;
+          int right = matrix[0].length-1;
+          while(top<=bottom&&left<=right){
+                //left - right
+              for (int i = left; i <= right; i++) {
+                  result.add(matrix[top][i]);
+              }
+              top++;
+                //top - bottom
+              for (int i = top; i <= bottom; i++) {
+                  result.add(matrix[i][right]);
+              }
+              right--;
+              //left -right
+              if(bottom>=top){
+                  for (int i = right; i >=left ; i--) {
+                      result.add(matrix[bottom][i]);
+                  }
+                  bottom--;
+              }
+              if (right>=left){
+                  for (int i = bottom; i >=top ; i--) {
+                      result.add(matrix[i][left]);
+                  }
+                  left++;
+              }
+
+          }
+            return result;
+        }
 
 
 
