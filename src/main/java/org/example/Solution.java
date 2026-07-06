@@ -379,6 +379,33 @@ public static int maxSubArray3(int[] nums) {
             return result;
         }
 
+    public static void rotate(int[][] matrix) {
+    int n = matrix.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                //swap elements along diagonal
+                int temp = matrix[i][j];
+                matrix[i][j]= matrix[j][i];
+                matrix[j][i]=temp;
+            }
+        }
+
+        //reverse every row elements
+        for (int i = 0; i < n; i++) {
+            int left =0;
+            int right =n-1;
+
+            while(left<right){
+                int temp = matrix[i][left];
+                matrix[i][left]=matrix[i][right];
+                matrix[i][right]=temp;
+                left++;
+                right--;
+
+            }
+        }
+
+    }
 
 
 }
