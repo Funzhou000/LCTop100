@@ -407,6 +407,70 @@ public static int maxSubArray3(int[] nums) {
 
     }
 
+    public static ListNode reverseList(ListNode head) {
+        ListNode prev = null; // 前驱节点，初始为空
+        ListNode curr = head; // 当前节点，从头节点开始
+
+        // 当 curr 不为空时，继续 Iteration（迭代）
+        while (curr != null) {
+            // 1. 临时保存下一个节点，防止丢失
+            ListNode next = curr.next;
+
+            // 2. 核心反转操作：将当前节点的 next 指向它前面的节点
+            curr.next = prev;
+
+            // 3. 移动 prev 和 curr 指针，进入下一轮
+            prev = curr;
+            curr = next;
+        }
+
+        // 当循环结束时，curr 变成了 null，而 prev 刚好停留在原链表的最后一个节点
+        // 这个节点就是反转后新链表的头节点
+        return prev;
+    }
+
+    public static boolean isPalindrome(ListNode head) {
+        if (head == null || head.next == null) {
+            return true;
+        }
+
+        // 1. 寻找中间节点 (Find the middle node)
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // 2. 反转后半部分 (Reverse the second half)
+        ListNode secondHalfStart = reverseList(slow.next);
+
+        // 3. 对比前后两半 (Compare)
+        ListNode p1 = head;
+        ListNode p2 = secondHalfStart;
+        boolean isPalindrome = true;
+        while (isPalindrome && p2 != null) {
+            if (p1.val != p2.val) {
+                isPalindrome = false;
+            }
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+
+        // 4. 恢复链表 (Restore the list) - Optional but recommended
+        slow.next = reverseList(secondHalfStart);
+
+        return isPalindrome;
+    }
+
+    public static class ListNode {
+        int val;
+        ListNode next;
+        ListNode() {}
+        ListNode(int val) { this.val = val; }
+        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    }
 
 }
+
 
